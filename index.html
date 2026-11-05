@@ -4,7 +4,7 @@
 nav{display:flex;position:sticky;top:0;background:#111}nav b{flex:1;padding:12px;text-align:center;cursor:pointer}nav b.on{color:#2ee6d6}
 .card{background:#161b26;margin:10px;padding:12px;border-radius:12px}.k{color:#888}.r{color:#ff5470}.g{color:#3ddc84}.pill{padding:2px 8px;border-radius:9px;font-size:12px}
 .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #222}.kill{color:#777;text-decoration:line-through #ff5470}
-a{color:#2ee6d6}.err{color:#ff5470;padding:20px}.empty{color:#777;padding:20px;text-align:center}.t{color:#666;font-size:11px;white-space:nowrap}
+a{color:#2ee6d6}.err{color:#ff5470;padding:20px}.empty{color:#777;padding:20px;text-align:center}.t{color:#666;font-size:11px;white-space:nowrap}.badge{display:inline-block;padding:1px 7px;border-radius:8px;font-size:11px;margin-left:6px}.badge.good{background:#143528;color:#3ddc84}.badge.watch{background:#3a2e14;color:#f0c14b}.badge.noise{background:#222;color:#888}
 .setup{padding:20px}.setup input{width:100%;box-sizing:border-box;padding:12px;border-radius:10px;border:1px solid #333;background:#0b0e14;color:#e6e6e6;margin:8px 0 12px}
 .setup button{width:100%;padding:12px;border:0;border-radius:10px;background:#2ee6d6;color:#0b0e14;font-weight:700}</style></head><body>
 <nav><b data-t="home" class="on">Home</b><b data-t="agents">Agents</b><b data-t="activity">Activity</b><b data-t="news">News</b><b data-t="account">Account</b></nav><main id="m"></main>
@@ -85,14 +85,23 @@ function draw(){
   }).join(''):'<div class="empty">No activity yet tonight</div>';
   if(tab=='news'){
     const news=(S.xnews||[]).slice();
-    const fromAct=A.filter(a=>a.kind=='xnews'||a.kind=='callout');
-    m.innerHTML='<div class="card"><b>X News</b> · '+((S.counts&&S.counts.xnews_n)||news.length)+
+    const usefulN=(S.counts&&S.counts.useful_n)||news.filter(n=>n.useful).length;
+    const watch=(S.news_watch||[]).slice(0,8);
+    m.innerHTML='<div class="card"><b>X News</b> · '+((S.counts&&S.counts.xnews_n)||news.length)+' · <span class="g">'+usefulN+' useful</span>'+
+      '<div class="k" style="margin-top:6px">Sortiert: gut/watch zuerst. Useful fließt in Analyst-Kontext (kein Auto-Kauf).</div>'+
       (news.length?news.map(n=>{
+        const v=n.verdict||'noise';
+        const badge='<span class="badge '+v+'">'+$(v)+(n.useful?' · useful':'')+'</span>';
         const title=n.url?'<a href="'+$(n.url)+'">'+$(n.name||'News')+'</a>':$(n.name||'News');
         const body=$((n.hook||n.summary||n.text||'').replace(/\s+/g,' ').slice(0,280));
-        return '<div style="padding:10px 0;border-bottom:1px solid #222"><div class="row" style="border:0;padding:0"><span>'+title+'</span><span class="t">'+when(n.ts)+'</span></div><div class="k" style="margin-top:6px;line-height:1.35">'+body+'</div></div>';
+        const mint=n.mint&&n.link?' · <a href="'+$(n.link)+'">Mint</a>':'';
+        return '<div style="padding:10px 0;border-bottom:1px solid #222"><div class="row" style="border:0;padding:0"><span>'+title+badge+mint+'</span><span class="t">'+when(n.ts)+'</span></div><div class="k" style="margin-top:6px;line-height:1.35">'+body+'</div></div>';
       }).join(''):'<div class="k" style="padding:8px 0">Noch keine News</div>')+
-      '</div><div class="card"><b>Callouts</b> · '+((S.counts&&S.counts.callouts_n)||0)+
+      '</div>'+
+      (watch.length?'<div class="card"><b>Watch (News gut, noch kein Entry)</b>'+watch.map(w=>{
+        return '<div class="row"><span>'+$(w.name|| (w.mint||'').slice(0,6))+'<br><span class="k">'+$((w.news&&w.news.title)||'')+' · score '+(w.score||'?')+'</span></span><span class="pill">Watch</span></div>';
+      }).join('')+'</div>':'')+
+      '<div class="card"><b>Callouts</b> · '+((S.counts&&S.counts.callouts_n)||0)+
       ((S.callouts||[]).length?(S.callouts||[]).slice(0,40).map(c=>{
         const who=c.url?'<a href="'+$(c.url)+'">@'+$(c.author||'?')+'</a>':'@'+$(c.author||'?');
         const coin=c.mint&&c.link?' · <a href="'+$(c.link)+'">FOMO</a>':'';
