@@ -23,7 +23,8 @@ a{color:#2ee6d6}.err{color:#ff5470;padding:20px}.empty{color:#777;padding:20px;t
   }
 })();
 let D=null;try{D=localStorage.getItem('d')}catch(e){}
-let tab='home',S=null,A=[],E=null;
+let tab='home',S=null,A=[],E=null,NF='all';
+document.getElementById('m').addEventListener('click',e=>{const c=e.target.closest('.nf');if(c){NF=c.dataset.f;draw()}});
 document.querySelectorAll('nav b').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('nav b').forEach(x=>x.classList.toggle('on',x==b));draw()});
 const $=s=>String(s??'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
 const when=ts=>{if(!ts)return'';const d=new Date((ts>1e12?ts:ts*1000));if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');const now=new Date();const same=d.toDateString()===now.toDateString();return same?(p(d.getHours())+':'+p(d.getMinutes())):(p(d.getDate())+'.'+p(d.getMonth()+1)+' '+p(d.getHours())+':'+p(d.getMinutes()));};
@@ -87,16 +88,20 @@ function draw(){
     const news=(S.xnews||[]).slice();
     const usefulN=(S.counts&&S.counts.useful_n)||news.filter(n=>n.useful).length;
     const watch=(S.news_watch||[]).slice(0,8);
+    const cnt={all:news.length,useful:news.filter(n=>n.useful).length,good:0,watch:0,noise:0};news.forEach(n=>{const v=n.verdict||'noise';if(v in cnt)cnt[v]++});
+    const lab={all:'Alle',useful:'Useful',good:'Gut',watch:'Watch',noise:'Noise'};
+    const chips='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">'+Object.keys(lab).map(k=>'<b class="nf" data-f="'+k+'" style="cursor:pointer;padding:4px 10px;border-radius:14px;border:1px solid #444;'+(NF==k?'background:#2a6;color:#000':'')+'">'+lab[k]+' '+cnt[k]+'</b>').join('')+'</div>';
+    const shown=news.filter(n=>NF=='all'||(NF=='useful'?n.useful:(n.verdict||'noise')==NF));
     m.innerHTML='<div class="card"><b>X News</b> · '+((S.counts&&S.counts.xnews_n)||news.length)+' · <span class="g">'+usefulN+' useful</span>'+
-      '<div class="k" style="margin-top:6px">Sortiert: gut/watch zuerst. Useful fließt in Analyst-Kontext (kein Auto-Kauf).</div>'+
-      (news.length?news.map(n=>{
+      '<div class="k" style="margin-top:6px">Sortiert: gut/watch zuerst. Useful fließt in Analyst-Kontext (kein Auto-Kauf).</div>'+chips+
+      (shown.length?shown.map(n=>{
         const v=n.verdict||'noise';
         const badge='<span class="badge '+v+'">'+$(v)+(n.useful?' · useful':'')+'</span>';
         const title=n.url?'<a href="'+$(n.url)+'">'+$(n.name||'News')+'</a>':$(n.name||'News');
         const body=$((n.hook||n.summary||n.text||'').replace(/\s+/g,' ').slice(0,280));
         const mint=n.mint&&n.link?' · <a href="'+$(n.link)+'">Mint</a>':'';
         return '<div style="padding:10px 0;border-bottom:1px solid #222"><div class="row" style="border:0;padding:0"><span>'+title+badge+mint+'</span><span class="t">'+when(n.ts)+'</span></div><div class="k" style="margin-top:6px;line-height:1.35">'+body+'</div></div>';
-      }).join(''):'<div class="k" style="padding:8px 0">Noch keine News</div>')+
+      }).join(''):'<div class="k" style="padding:8px 0">'+(news.length?'Keine News in dieser Kategorie':'Noch keine News')+'</div>')+
       '</div>'+
       (watch.length?'<div class="card"><b>Watch (News gut, noch kein Entry)</b>'+watch.map(w=>{
         return '<div class="row"><span>'+$(w.name|| (w.mint||'').slice(0,6))+'<br><span class="k">'+$((w.news&&w.news.title)||'')+' · score '+(w.score||'?')+'</span></span><span class="pill">Watch</span></div>';
