@@ -1,13 +1,72 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>Desk</title>
-<style>body{margin:0;font:14px -apple-system,system-ui;background:#0b0e14;color:#e6e6e6;max-width:430px}
-nav{display:flex;position:sticky;top:0;background:#111}nav b{flex:1;padding:12px;text-align:center;cursor:pointer}nav b.on{color:#2ee6d6}
-.card{background:#161b26;margin:10px;padding:12px;border-radius:12px}.k{color:#888}.r{color:#ff5470}.g{color:#3ddc84}.pill{padding:2px 8px;border-radius:9px;font-size:12px}
-.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #222}.kill{color:#777;text-decoration:line-through #ff5470}
-a{color:#2ee6d6}.err{color:#ff5470;padding:20px}.empty{color:#777;padding:20px;text-align:center}.t{color:#666;font-size:11px;white-space:nowrap}.badge{display:inline-block;padding:1px 7px;border-radius:8px;font-size:11px;margin-left:6px}.badge.good{background:#143528;color:#3ddc84}.badge.watch{background:#3a2e14;color:#f0c14b}.badge.noise{background:#222;color:#888}
-.setup{padding:20px}.setup input{width:100%;box-sizing:border-box;padding:12px;border-radius:10px;border:1px solid #333;background:#0b0e14;color:#e6e6e6;margin:8px 0 12px}
-.setup button{width:100%;padding:12px;border:0;border-radius:10px;background:#2ee6d6;color:#0b0e14;font-weight:700}</style></head><body>
-<nav><b data-t="home" class="on">Home</b><b data-t="agents">Agents</b><b data-t="activity">Activity</b><b data-t="news">News</b><b data-t="account">Account</b></nav><main id="m"></main>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex"><meta name="theme-color" content="#000000"><title>Desk</title>
+<style>
+:root{--bg:#000;--c1:#0f0f10;--c2:#161618;--ln:#232326;--tx:#f5f5f7;--mu:#8a8a90;--g:#00ff85;--r:#ff3b5c;--y:#ffc94d}
+*{box-sizing:border-box}html{background:var(--bg)}
+body{margin:0 auto;font:15px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;background:var(--bg);color:var(--tx);max-width:430px;min-height:100vh;padding-bottom:calc(76px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased}
+a{color:var(--tx);text-decoration:none}
+.g{color:var(--g)}.r{color:var(--r)}.k{color:var(--mu)}.y{color:var(--y)}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 4px;position:sticky;top:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:5}
+.top .brand{font-weight:800;font-size:18px;letter-spacing:-.3px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--c2);border:1px solid var(--ln);font-size:12px;font-weight:600;color:var(--mu)}
+.chip.paper{color:var(--y);border-color:#3a3115;background:#1a160a}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g)}.dot.off{background:#555;box-shadow:none}
+.hero{padding:6px 18px 0}
+.hero .lbl{color:var(--mu);font-size:13px;font-weight:600}
+.hero .big{font-size:44px;font-weight:800;letter-spacing:-1.5px;margin:2px 0 2px;font-variant-numeric:tabular-nums}
+.hero .chg{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.chart{margin:10px 0 0;height:150px;position:relative}.chart svg{display:block;width:100%;height:100%}
+.rng{display:flex;gap:6px;padding:8px 18px 4px}.rng b{flex:1;text-align:center;padding:7px 0;border-radius:999px;font-size:13px;color:var(--mu);cursor:pointer;font-weight:700}.rng b.on{background:var(--c2);color:var(--tx)}
+.sum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 14px 4px}
+.sum div{background:var(--c1);border:1px solid var(--ln);border-radius:16px;padding:11px 10px}
+.sum .l{font-size:11px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.sum .v{font-size:18px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.net{margin:8px 14px 0;border-radius:18px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.net.g{background:linear-gradient(135deg,#00ff8522,#00ff8508);border:1px solid #00ff8540}.net.r{background:linear-gradient(135deg,#ff3b5c22,#ff3b5c08);border:1px solid #ff3b5c40}
+.net .v{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.h2{display:flex;justify-content:space-between;align-items:baseline;padding:20px 18px 8px;font-size:20px;font-weight:800;letter-spacing:-.4px}.h2 span{font-size:13px;color:var(--mu);font-weight:600}
+.hold{margin:0 14px 8px;background:var(--c1);border:1px solid var(--ln);border-radius:18px;padding:12px 14px;cursor:pointer}
+.hold .ln1{display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--c2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--mu);flex:none;border:1px solid var(--ln)}
+.hold .nm{flex:1;min-width:0}.hold .nm b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px}.hold .nm span{font-size:12px;color:var(--mu)}
+.hold .sp{width:78px;height:34px;flex:none}
+.hold .pl{text-align:right;flex:none;min-width:78px}.hold .pl b{display:block;font-size:16px;font-variant-numeric:tabular-nums}.hold .pl span{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.hold .more{margin-top:12px;display:none}.hold.open .more{display:block}
+.hold .bigc{height:120px}.hold .bigc svg{width:100%;height:100%;display:block}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:10px;font-size:13px}.kv div{display:flex;justify-content:space-between;border-bottom:1px solid var(--ln);padding:5px 0}.kv span{color:var(--mu)}
+.btn{display:block;text-align:center;padding:13px;border-radius:999px;font-weight:800;margin-top:12px;border:0;width:100%;font-size:15px;cursor:pointer}
+.btn.sell{background:var(--r);color:#fff}.btn.go{background:var(--g);color:#000}
+.mini{font-size:12px;color:var(--mu);margin-top:6px;display:flex;gap:10px;flex-wrap:wrap}
+.card{background:var(--c1);border:1px solid var(--ln);margin:0 14px 10px;padding:14px;border-radius:18px}
+.card>b:first-child{font-size:16px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ln)}.row:last-child{border-bottom:0}
+.row a{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kill{color:#666}.kill a{color:#777;text-decoration:line-through #ff3b5c80}
+.pill{padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;background:var(--c2)}.pill.g{background:#00ff8518}.pill.r{background:#ff3b5c18}
+.err{color:var(--r);padding:20px}.empty{color:var(--mu);padding:22px;text-align:center;background:var(--c1);border:1px dashed var(--ln);border-radius:18px;margin:0 14px 10px}
+.t{color:#666;font-size:11px;white-space:nowrap}
+.badge{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;margin-left:6px;font-weight:700}.badge.good{background:#00ff8518;color:var(--g)}.badge.watch{background:#ffc94d18;color:var(--y)}.badge.noise{background:#222;color:#888}
+.nf{cursor:pointer;padding:6px 12px;border-radius:999px;background:var(--c2);border:1px solid var(--ln);font-size:13px;color:var(--mu)}.nf.on{background:var(--g);color:#000;border-color:var(--g)}
+.setup{padding:20px}.setup input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);margin:8px 0 12px;font-size:15px}
+.setup button{width:100%;padding:14px;border:0;border-radius:999px;background:var(--g);color:#000;font-weight:800;font-size:15px}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;background:rgba(10,10,10,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--ln);padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:9}
+nav b{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;font-size:10.5px;font-weight:600;color:#6b6b70;cursor:pointer}
+nav b svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav b.on{color:var(--tx)}nav b.on svg{stroke:var(--g)}
+.act{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--ln)}.act:last-child{border:0}
+.act .ic{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none;background:var(--c2)}
+.act .bd{flex:1;min-width:0}.act .bd b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.act .bd span{font-size:12px;color:var(--mu)}
+.act .rt{font-weight:700;font-size:14px;text-align:right;font-variant-numeric:tabular-nums}
+</style></head><body>
+<div class="top"><span class="brand">Desk</span><span id="hdr"></span></div>
+<main id="m"></main>
+<nav>
+<b data-t="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</b>
+<b data-t="agents"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg>Agents</b>
+<b data-t="activity"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Aktivität</b>
+<b data-t="news"><svg viewBox="0 0 24 24"><path d="M4 5h13v14H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5"/></svg>News</b>
+<b data-t="account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Konto</b>
+</nav>
 <script>
 (function(){
   const q=new URLSearchParams(location.search);
@@ -23,11 +82,44 @@ a{color:#2ee6d6}.err{color:#ff5470;padding:20px}.empty{color:#777;padding:20px;t
   }
 })();
 let D=null;try{D=localStorage.getItem('d')}catch(e){}
-let tab='home',S=null,A=[],E=null,NF='all';
-document.getElementById('m').addEventListener('click',e=>{const c=e.target.closest('.nf');if(c){NF=c.dataset.f;draw()}});
-document.querySelectorAll('nav b').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('nav b').forEach(x=>x.classList.toggle('on',x==b));draw()});
+let tab='home',S=null,A=[],E=null,NF='all',RG='all',OPEN={};
+try{RG=localStorage.getItem('rg')||'all'}catch(e){}
+document.getElementById('m').addEventListener('click',e=>{
+  const c=e.target.closest('.nf');if(c){NF=c.dataset.f;return draw()}
+  const r=e.target.closest('.rng b');if(r){RG=r.dataset.r;try{localStorage.setItem('rg',RG)}catch(_){}return draw()}
+  if(e.target.closest('a,button'))return;
+  const hcard=e.target.closest('.hold');if(hcard){const id=hcard.dataset.id;OPEN[id]=!OPEN[id];hcard.classList.toggle('open',!!OPEN[id])}
+});
+document.querySelectorAll('nav b').forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll('nav b').forEach(x=>x.classList.toggle('on',x==b));window.scrollTo(0,0);draw()});
 const $=s=>String(s??'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
 const when=ts=>{if(!ts)return'';const d=new Date((ts>1e12?ts:ts*1000));if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');const now=new Date();const same=d.toDateString()===now.toDateString();return same?(p(d.getHours())+':'+p(d.getMinutes())):(p(d.getDate())+'.'+p(d.getMonth()+1)+' '+p(d.getHours())+':'+p(d.getMinutes()));};
+const N=v=>(typeof v==='number'&&isFinite(v))?v:null;
+const usd=v=>{v=N(v);if(v==null)return'—';return '$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
+const sUsd=v=>{v=N(v);if(v==null)return'—';return (v>=0?'+':'-')+usd(v)};
+const sPct=v=>{v=N(v);if(v==null)return'—';return (v>=0?'+':'')+v.toFixed(1)+'%'};
+const cls=v=>N(v)==null?'k':(v>=0?'g':'r');
+const px=v=>{v=N(v);if(v==null)return'—';if(v>=1)return '$'+v.toFixed(4);const s=v.toPrecision(4);return '$'+s};
+const ago=ts=>{if(!ts)return'';const s=Date.now()/1000-ts;if(s<60)return Math.round(s)+'s';if(s<3600)return Math.round(s/60)+'m';if(s<86400)return (s/3600).toFixed(1).replace('.0','')+'h';return Math.round(s/86400)+'d'};
+let GID=0;
+/* SVG sparkline: pts = [[ts,v],…] or [v,…]; base = optional dashed reference line */
+function spark(pts,color,opt){
+  opt=opt||{};const W=opt.w||300,H=opt.h||100,pad=opt.pad==null?4:opt.pad;
+  const ys=(pts||[]).map(p=>Array.isArray(p)?p[1]:p).filter(v=>N(v)!=null);
+  if(ys.length<2)return '<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><line x1="0" y1="'+H/2+'" x2="'+W+'" y2="'+H/2+'" stroke="#333" stroke-width="2" stroke-dasharray="4 4"/></svg>';
+  let lo=Math.min(...ys),hi=Math.max(...ys);if(opt.base!=null){lo=Math.min(lo,opt.base);hi=Math.max(hi,opt.base)}
+  if(hi===lo){hi+=1e-9;lo-=1e-9}
+  const X=i=>(i/(ys.length-1))*W,Y=v=>pad+(1-(v-lo)/(hi-lo))*(H-2*pad);
+  const d=ys.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join('');
+  const id='g'+(++GID);
+  let s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">';
+  if(opt.fill!==false)s+='<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".28"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs><path d="'+d+'L'+W+' '+H+'L0 '+H+'Z" fill="url(#'+id+')"/>';
+  if(opt.base!=null)s+='<line x1="0" x2="'+W+'" y1="'+Y(opt.base).toFixed(1)+'" y2="'+Y(opt.base).toFixed(1)+'" stroke="#666" stroke-width="1" stroke-dasharray="3 4" vector-effect="non-scaling-stroke"/>';
+  if(opt.stop!=null&&opt.stop>=lo)s+='<line x1="0" x2="'+W+'" y1="'+Y(opt.stop).toFixed(1)+'" y2="'+Y(opt.stop).toFixed(1)+'" stroke="#ff3b5c" stroke-opacity=".55" stroke-width="1" stroke-dasharray="2 4" vector-effect="non-scaling-stroke"/>';
+  s+='<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="'+(opt.sw||2)+'" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>';
+  if(opt.dot!==false){const lx=X(ys.length-1),ly=Y(ys[ys.length-1]);s+='<circle cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" r="'+(opt.r||3.5)+'" fill="'+color+'"/>'}
+  return s+'</svg>';
+}
+const COL=v=>(N(v)!=null&&v<0)?'#ff3b5c':'#00ff85';
 function saveKey(){
   const v=(document.getElementById('dk')||{}).value||'';
   const m=v.trim().match(/(?:[?&#]d=)?([A-Za-z0-9_-]{16,})/);
@@ -39,84 +131,140 @@ async function load(){
   try{
     S=await(await fetch('d/'+encodeURIComponent(D)+'/state.json?'+Date.now())).json();
     A=await(await fetch('d/'+encodeURIComponent(D)+'/activity.json?'+Date.now())).json();
+    if(!S.equity){try{S.equity=await(await fetch('d/'+encodeURIComponent(D)+'/chart.json?'+Date.now())).json()}catch(_){S.equity=[]}}
     E=null
-  }catch(e){E='Desk data unreachable. Retrying every 15s.'}
+  }catch(e){E='Desk-Daten nicht erreichbar. Neuer Versuch alle 15s.'}
   draw()
 }
+function header(){
+  const h=document.getElementById('hdr');if(!h)return;
+  if(!S){h.innerHTML='';return}
+  const live=S.ts&&(Date.now()/1000-S.ts<90);
+  h.innerHTML=(S.mode=='PAPER'?'<span class="chip paper">PAPER</span> ':'<span class="chip">'+$(S.mode)+'</span> ')+'<span class="chip"><i class="dot'+(live?'':' off')+'"></i>'+(live?'Live':'Offline')+'</span>';
+}
+function holdCard(p){
+  const c=COL(p.pnl!=null?p.pnl:p.pct);const sym=p.symbol||(p.name||'').slice(0,4);
+  const open=!!OPEN[p.id];
+  return '<div class="hold'+(open?' open':'')+'" data-id="'+p.id+'"><div class="ln1">'+
+    '<div class="av">'+$(String(sym).slice(0,3).toUpperCase())+'</div>'+
+    '<div class="nm"><b>'+$(p.name)+'</b><span>'+$(p.symbol?('$'+p.symbol):'')+' · '+usd(p.value!=null?p.value:p.size)+' · '+ago(p.opened_at)+'</span></div>'+
+    '<div class="sp">'+spark(p.spark,c,{w:78,h:34,fill:false,base:p.entry,sw:1.8,r:2.5})+'</div>'+
+    '<div class="pl"><b class="'+cls(p.pnl)+'">'+sUsd(p.pnl)+'</b><span class="'+cls(p.pct)+'">'+sPct(p.pct)+'</span></div></div>'+
+    '<div class="more"><div class="bigc">'+spark(p.spark,c,{w:300,h:120,base:p.entry,stop:p.stop_price})+'</div>'+
+    '<div class="mini"><span>– – Einstieg</span><span class="r">· · Stop</span><span>'+(p.spark||[]).length+' Punkte</span></div>'+
+    '<div class="kv"><div><span>Einsatz</span>'+usd(p.size)+'</div><div><span>Wert</span>'+usd(p.value)+'</div>'+
+    '<div><span>Einstieg</span>'+px(p.entry)+'</div><div><span>Jetzt</span>'+px(p.price)+'</div>'+
+    '<div><span>Peak</span>'+px(p.peak)+'</div><div><span>Stop -'+$(p.stop_pct)+'%</span>'+px(p.stop_price)+'</div>'+
+    '<div><span>Brutto</span><b class="'+cls(p.pnl_gross)+'">'+sUsd(p.pnl_gross)+'</b></div><div><span>Gebühren</span>'+usd(p.fees_est)+'</div>'+
+    '<div><span>Trail</span>'+(p.trail_active?'<b class="g">aktiv</b>':'aus')+'</div><div><span>Preis</span>'+ago(p.price_ts)+'</div></div>'+
+    '<a class="btn sell" href="'+$(p.link)+'" target="_blank" rel="noopener">Sell on FOMO</a></div></div>';
+}
+function closedRow(c){
+  const r={trail:'Trail',stop:'Stop',timeout:'Timeout',pulled:'Liq weg'}[c.reason]||$(c.reason||'');
+  return '<div class="act"><div class="ic" style="color:'+COL(c.pnl)+'">'+(N(c.pnl)!=null&&c.pnl>=0?'▲':'▼')+'</div>'+
+    '<div class="bd"><b><a href="'+$(c.link)+'" target="_blank" rel="noopener">'+$(c.name)+'</a></b><span>'+(c.mode&&c.mode!='PAPER'?$(c.mode)+' · ':'')+r+' · '+px(c.entry)+' → '+px(c.exit_price)+' · '+when(c.closed_at)+'</span></div>'+
+    '<div class="rt"><div class="'+cls(c.pnl)+'">'+sUsd(c.pnl)+'</div><div class="'+cls(c.pct)+'" style="font-size:12px">'+sPct(c.pct)+'</div></div></div>';
+}
+function home(){
+  const st=S.settings||{};const start=(st.desk&&st.desk.paper_start_stack)||null;
+  const unr=N(S.unrealized_pnl)||0,rea=N(S.realized_pnl)||0,net=N(S.net_pnl)!=null?S.net_pnl:rea+unr;
+  const liveVal=S.stack+unr;
+  let eq=(S.equity||[]).slice();
+  const now=Math.floor(Date.now()/1000);
+  const cut={'1h':3600,'4h':14400,'all':1e12}[RG]||1e12;
+  eq=eq.filter(p=>p[0]>=now-cut);
+  eq.push([now,liveVal]);
+  const base=eq.length>1?eq[0][1]:(start||S.stack);
+  const chg=liveVal-base,chgP=base?100*chg/base:0;
+  const totChg=start?liveVal-start:null;
+  const c=COL(chg);
+  const pos=S.positions||[],closed=S.closed||[];
+  const scans=(S.scans||[]).slice(0,15);
+  return '<div class="hero"><div class="lbl">Stack · live bewertet</div><div class="big">'+usd(liveVal)+'</div>'+
+    '<div class="chg '+cls(chg)+'">'+sUsd(chg)+' ('+sPct(chgP)+') <span class="k" style="font-weight:600">'+({'1h':'1 Std','4h':'4 Std','all':'gesamt'}[RG])+'</span></div>'+
+    '<div class="k" style="font-size:13px;margin-top:4px">Frei '+usd(S.balance)+' · investiert '+usd(pos.reduce((a,p)=>a+(p.size||0),0))+(start?' · Start '+usd(start):'')+'</div></div>'+
+    '<div class="chart">'+spark(eq,c,{w:400,h:150,pad:10,base:base,r:4})+'</div>'+
+    '<div class="rng">'+[['1h','1H'],['4h','4H'],['all','ALL']].map(([k,l])=>'<b data-r="'+k+'" class="'+(RG==k?'on':'')+'">'+l+'</b>').join('')+'</div>'+
+    '<div class="net '+(net>=0?'g':'r')+'"><div><div style="font-size:13px" class="k">'+(net>=0?'Gewonnen':'Verloren')+' (netto)</div><div class="v '+cls(net)+'">'+sUsd(net)+'</div></div>'+
+      '<div style="text-align:right;font-size:13px" class="k">'+(totChg!=null?'vs Start<br><b class="'+cls(totChg)+'" style="font-size:16px">'+sUsd(totChg)+'</b>':'')+'</div></div>'+
+    '<div class="sum"><div><div class="l">Realisiert</div><div class="v '+cls(rea)+'">'+sUsd(rea)+'</div></div>'+
+      '<div><div class="l">Offen</div><div class="v '+cls(unr)+'">'+sUsd(unr)+'</div></div>'+
+      '<div><div class="l">Trades</div><div class="v">'+((S.counts&&S.counts.trades)||0)+'</div></div></div>'+
+    '<div class="h2">Offen <span>'+pos.length+' Position'+(pos.length==1?'':'en')+'</span></div>'+
+    (pos.length?pos.map(holdCard).join(''):'<div class="empty">Keine offenen Positionen</div>')+
+    '<div class="h2">Geschlossen <span>'+closed.length+'</span></div>'+
+    (closed.length?'<div class="card">'+closed.map(closedRow).join('')+'</div>':'<div class="empty">Noch nichts verkauft</div>')+
+    '<div class="h2">Gescannt <span>'+(S.counts&&S.counts.pools!=null?S.counts.pools:scans.length)+' Pools</span></div>'+
+    '<div class="card">'+(scans.length?scans.map(s=>{
+       const href=$(s.link||S.signup_url);
+       const right=s.verdict=='pass'?('<span class="g">liq $'+Math.round(s.liquidityUsd||0)+' →</span>'):'<span class="k">'+$(s.reason||'kill')+'</span>';
+       return '<div class="row '+(s.verdict=='kill'?'kill':'')+'"><a href="'+href+'" target="_blank" rel="noopener">'+$(s.name||(s.mint||'').slice(0,6))+'</a><span style="font-size:13px;text-align:right">'+right+(s.ts||s.at?' <span class="t">'+when(s.ts||s.at)+'</span>':'')+'</span></div>';
+     }).join(''):'<div class="k">Noch keine Scans</div>')+'</div>'+
+    '<div class="h2">Callouts <span>'+((S.counts&&S.counts.callouts_n)||0)+' · alle 50 Min</span></div>'+
+    '<div class="card">'+((S.callouts||[]).length?(S.callouts||[]).slice(0,12).map(calloutRow).join(''):'<div class="k">Noch keine Callouts</div>')+'</div>';
+}
+function calloutRow(c){
+  const who=c.url?'<a href="'+$(c.url)+'" target="_blank" rel="noopener"><b>@'+$(c.author||'?')+'</b></a>':'<b>@'+$(c.author||'?')+'</b>';
+  const coin=c.mint&&c.link?' · <a class="g" href="'+$(c.link)+'" target="_blank" rel="noopener">FOMO</a>':'';
+  const body=$((c.text||'').replace(/\s+/g,' ').slice(0,240));
+  return '<div style="padding:10px 0;border-bottom:1px solid var(--ln)"><div style="display:flex;justify-content:space-between"><span>'+who+coin+'</span><span class="t">'+when(c.ts)+'</span></div><div class="k" style="margin-top:5px;font-size:14px">'+body+'</div></div>';
+}
 function draw(){
-  const m=document.getElementById('m');
+  const m=document.getElementById('m');header();
   if(E==='need-key'){
     m.innerHTML='<div class="setup"><div class="err">Handy hat den Schlüssel nicht mitbekommen (häufig bei Samsung / In-App-Browser).</div><p class="k">Den kompletten Link nochmal in <b>Chrome</b> öffnen — oder den Teil nach <code>d=</code> hier einfügen:</p><input id="dk" placeholder="d=… oder kompletter Link" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><button type="button" id="sk">Speichern &amp; laden</button></div>';
     const btn=document.getElementById('sk');if(btn)btn.onclick=saveKey;
     return;
   }
-  if(E)return m.innerHTML='<div class="err">'+$(E)+'</div>';
-  if(!S)return m.innerHTML='<div class="empty">Loading…</div>';
-  const P=S.mode=='PAPER'?'PAPER · ':'';const st=S.settings;
-  if(tab=='home'){
-    const scans=(S.scans||[]).slice(0,25);
-    m.innerHTML='<div class="card"><div class="k">'+P+'Stack</div><h1>$'+S.stack.toFixed(2)+'</h1><div class="k">free $'+S.balance.toFixed(2)+'</div></div>'+
-     (S.positions.length?S.positions.map(p=>'<div class="card row"><a href="'+$(p.link)+'">'+$(p.name)+'</a><span>$'+p.size.toFixed(2)+' · stop -'+p.stop_pct+'%</span><a href="'+$(p.link)+'">Sell on FOMO</a></div>').join(''):'<div class="empty">No open positions</div>')+
-     '<div class="card"><b>Scanned</b> · '+(S.counts&&S.counts.pools!=null?S.counts.pools:scans.length)+' pools'+
-     (scans.length?scans.map(s=>{
-       const href=$(s.link||S.signup_url);
-       const right=s.verdict=='pass'?('liq $'+Math.round(s.liquidityUsd||0)+' · → auditor'):$(s.reason||'kill');
-       return '<div class="row '+(s.verdict=='kill'?'kill':'')+'"><a href="'+href+'">'+$(s.name||s.mint.slice(0,6))+'</a><span>'+right+(s.ts||s.at?' <span class="t">'+when(s.ts||s.at)+'</span>':'')+'</span></div>';
-     }).join(''):'<div class="k" style="padding:8px 0">Noch keine Scans</div>')+
-     '</div>'+
-     '<div class="card"><b>Callouts</b> · alle 50 Min · '+((S.counts&&S.counts.callouts_n)||0)+
-     ((S.callouts||[]).length?(S.callouts||[]).slice(0,25).map(c=>{
-       const who=c.url?'<a href="'+$(c.url)+'">@'+$(c.author||'?')+'</a>':'@'+$(c.author||'?');
-       const coin=c.mint&&c.link?' · <a href="'+$(c.link)+'">FOMO</a>':'';
-       const body=$((c.text||'').replace(/\s+/g,' ').slice(0,220));
-       return '<div style="padding:10px 0;border-bottom:1px solid #222"><div class="row" style="border:0;padding:0"><span>'+who+coin+'</span><span class="t">'+when(c.ts)+'</span></div><div style="margin-top:6px;line-height:1.35">'+body+'</div></div>';
-     }).join(''):'<div class="k" style="padding:8px 0">Noch keine Callouts</div>')+
-     '</div>';
-  }
-  if(tab=='agents'){const c=S.counts;m.innerHTML='<div class="card"><b>Scanner</b> · '+c.pools+' pools'+(S.scans||[]).slice(0,25).map(s=>{const href=$(s.link||S.signup_url);return '<div class="row '+(s.verdict=='kill'?'kill':'')+'"><a href="'+href+'">'+$(s.name||s.mint.slice(0,6))+'</a><span>'+(s.verdict=='pass'?'liq $'+Math.round(s.liquidityUsd||0)+' · → auditor':$(s.reason))+'</span></div>'}).join('')+'</div>'+
-'<div class="card"><b>Auditor</b> · '+c.audited+' taken apart · '+c.audit_rejected+' rejected'+S.audits.slice(0,5).map(a=>'<div class="row"><span>'+a.mint.slice(0,6)+'</span><span class="'+(a.passed?'g':'r')+'">'+(a.passed?'8/8 → Executor':$(a.reason))+'</span></div>').join('')+'</div>'+
-'<div class="card"><b>Analyst</b> · Scoring · '+c.scored+' scored · '+st.analyst.mode+'</div><div class="card"><b>Executor</b> · '+c.trades+' trades · '+st.executor.stack_pct+'% of stack</div>'+
-'<div class="card"><b>XWatch</b> · '+(c.callouts_n||0)+' callouts · '+(c.xnews_n||0)+' news · '+((S.heartbeats||{}).xwatch&&(Date.now()/1000-S.heartbeats.xwatch<120)?'listening':'idle')+'</div>'+
-'<div class="card"><b>Risk</b> · '+(S.positions.length?'Guarding':'Idle')+' <span class="pill r">stop -'+st.risk.stop_pct+'%</span> <span class="pill g">trail '+st.risk.trail_pct+'%</span></div>'}
-  if(tab=='activity')m.innerHTML=A.filter(a=>a.kind!='xnews'&&a.kind!='callout').length?A.filter(a=>a.kind!='xnews'&&a.kind!='callout').map(a=>{
-    const title=(a.mode=='PAPER'?'PAPER · ':'')+(a.link?'<a href="'+$(a.link)+'">'+$(a.title)+'</a>':$(a.title));
-    const body=$(a.sub||'');
-    const tm=when(a.ts);
-    return '<div class="card row'+(a.kind=='kill'?' kill':'')+'"><span>'+title+'<br><span class="k">'+body+(tm?' · '+tm:'')+'</span></span><span>'+$(a.right)+'</span></div>';
-  }).join(''):'<div class="empty">No activity yet tonight</div>';
+  if(E&&!S)return m.innerHTML='<div class="err">'+$(E)+'</div>';
+  if(!S)return m.innerHTML='<div class="empty" style="margin-top:30px">Lädt…</div>';
+  const st=S.settings||{};
+  const warn=E?'<div class="err" style="padding:8px 18px">'+$(E)+'</div>':'';
+  if(tab=='home')m.innerHTML=warn+home();
+  if(tab=='agents'){const c=S.counts||{};const hb=S.heartbeats||{};const alive=a=>hb[a]&&(Date.now()/1000-hb[a]<120);
+    const ag=(n,a,sub,extra)=>'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>'+n+'</b><span class="chip"><i class="dot'+(alive(a)?'':' off')+'"></i>'+(alive(a)?'läuft':'idle')+'</span></div><div class="k" style="margin-top:4px;font-size:13px">'+sub+'</div>'+(extra||'')+'</div>';
+    m.innerHTML='<div class="h2">Agents</div>'+
+    ag('Scanner','scanner',c.pools+' Pools',(S.scans||[]).slice(0,25).map(s=>{const href=$(s.link||S.signup_url);return '<div class="row '+(s.verdict=='kill'?'kill':'')+'"><a href="'+href+'" target="_blank" rel="noopener">'+$(s.name||(s.mint||'').slice(0,6))+'</a><span style="font-size:13px">'+(s.verdict=='pass'?'<span class="g">liq $'+Math.round(s.liquidityUsd||0)+' → auditor</span>':'<span class="k">'+$(s.reason)+'</span>')+'</span></div>'}).join(''))+
+    ag('Auditor','auditor',c.audited+' geprüft · '+c.audit_rejected+' abgelehnt',(S.audits||[]).slice(0,5).map(a=>'<div class="row"><span>'+$((a.mint||'').slice(0,6))+'</span><span class="'+(a.passed?'g':'r')+'" style="font-size:13px">'+(a.passed?'8/8 → Executor':$(a.reason))+'</span></div>').join(''))+
+    ag('Analyst','analyst',c.scored+' bewertet · '+$(st.analyst&&st.analyst.mode))+
+    ag('Executor','executor',c.trades+' Trades · '+$(st.executor&&st.executor.stack_pct)+'% vom Stack')+
+    ag('XWatch','xwatch',(c.callouts_n||0)+' Callouts · '+(c.xnews_n||0)+' News')+
+    ag('Risk','risk',((S.positions||[]).length?'Bewacht '+S.positions.length+' Position(en)':'Idle'),'<div style="margin-top:8px;display:flex;gap:6px"><span class="pill r">stop -'+$(st.risk&&st.risk.stop_pct)+'%</span><span class="pill g">trail '+$(st.risk&&st.risk.trail_pct)+'%</span></div>')}
+  if(tab=='activity'){const L=A.filter(a=>a.kind!='xnews'&&a.kind!='callout');
+    const ic={buy:['●','#00ff85'],sell:['$','#00ff85'],stop:['■','#ff3b5c'],kill:['×','#666']};
+    m.innerHTML='<div class="h2">Aktivität <span>'+L.length+'</span></div>'+(L.length?'<div class="card">'+L.map(a=>{
+    const title=(a.mode=='PAPER'?'<span class="y" style="font-size:11px">PAPER </span>':'')+(a.link?'<a href="'+$(a.link)+'" target="_blank" rel="noopener">'+$(a.title)+'</a>':$(a.title));
+    const i=ic[a.kind]||['•','#8a8a90'];const rt=String(a.right||'');const rc=/^\+/.test(rt)?'g':(/^-/.test(rt)?'r':'');
+    return '<div class="act'+(a.kind=='kill'?' kill':'')+'"><div class="ic" style="color:'+i[1]+'">'+i[0]+'</div><div class="bd"><b>'+title+'</b><span>'+$(a.sub||'')+(a.ts?' · '+when(a.ts):'')+'</span></div><div class="rt '+rc+'">'+$(rt)+'</div></div>';
+  }).join('')+'</div>':'<div class="empty">Heute noch keine Aktivität</div>')}
   if(tab=='news'){
     const news=(S.xnews||[]).slice();
     const usefulN=(S.counts&&S.counts.useful_n)||news.filter(n=>n.useful).length;
     const watch=(S.news_watch||[]).slice(0,8);
     const cnt={all:news.length,useful:news.filter(n=>n.useful).length,good:0,watch:0,noise:0};news.forEach(n=>{const v=n.verdict||'noise';if(v in cnt)cnt[v]++});
     const lab={all:'Alle',useful:'Useful',good:'Gut',watch:'Watch',noise:'Noise'};
-    const chips='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">'+Object.keys(lab).map(k=>'<b class="nf" data-f="'+k+'" style="cursor:pointer;padding:4px 10px;border-radius:14px;border:1px solid #444;'+(NF==k?'background:#2a6;color:#000':'')+'">'+lab[k]+' '+cnt[k]+'</b>').join('')+'</div>';
+    const chips='<div style="display:flex;flex-wrap:wrap;gap:6px;margin:4px 14px 12px">'+Object.keys(lab).map(k=>'<b class="nf'+(NF==k?' on':'')+'" data-f="'+k+'">'+lab[k]+' '+cnt[k]+'</b>').join('')+'</div>';
     const shown=news.filter(n=>NF=='all'||(NF=='useful'?n.useful:(n.verdict||'noise')==NF));
-    m.innerHTML='<div class="card"><b>X News</b> · '+((S.counts&&S.counts.xnews_n)||news.length)+' · <span class="g">'+usefulN+' useful</span>'+
-      '<div class="k" style="margin-top:6px">Sortiert: gut/watch zuerst. Useful fließt in Analyst-Kontext (kein Auto-Kauf).</div>'+chips+
-      (shown.length?shown.map(n=>{
+    m.innerHTML='<div class="h2">X News <span>'+((S.counts&&S.counts.xnews_n)||news.length)+' · <span class="g">'+usefulN+' useful</span></span></div>'+
+      '<div class="k" style="margin:-4px 18px 10px;font-size:13px">Gut/Watch zuerst. Useful fließt in Analyst-Kontext (kein Auto-Kauf).</div>'+chips+
+      '<div class="card">'+(shown.length?shown.map(n=>{
         const v=n.verdict||'noise';
         const badge='<span class="badge '+v+'">'+$(v)+(n.useful?' · useful':'')+'</span>';
-        const title=n.url?'<a href="'+$(n.url)+'">'+$(n.name||'News')+'</a>':$(n.name||'News');
+        const title=n.url?'<a href="'+$(n.url)+'" target="_blank" rel="noopener"><b>'+$(n.name||'News')+'</b></a>':'<b>'+$(n.name||'News')+'</b>';
         const body=$((n.hook||n.summary||n.text||'').replace(/\s+/g,' ').slice(0,280));
-        const mint=n.mint&&n.link?' · <a href="'+$(n.link)+'">Mint</a>':'';
-        return '<div style="padding:10px 0;border-bottom:1px solid #222"><div class="row" style="border:0;padding:0"><span>'+title+badge+mint+'</span><span class="t">'+when(n.ts)+'</span></div><div class="k" style="margin-top:6px;line-height:1.35">'+body+'</div></div>';
-      }).join(''):'<div class="k" style="padding:8px 0">'+(news.length?'Keine News in dieser Kategorie':'Noch keine News')+'</div>')+
-      '</div>'+
-      (watch.length?'<div class="card"><b>Watch (News gut, noch kein Entry)</b>'+watch.map(w=>{
-        return '<div class="row"><span>'+$(w.name|| (w.mint||'').slice(0,6))+'<br><span class="k">'+$((w.news&&w.news.title)||'')+' · score '+(w.score||'?')+'</span></span><span class="pill">Watch</span></div>';
+        const mint=n.mint&&n.link?' · <a class="g" href="'+$(n.link)+'" target="_blank" rel="noopener">Mint</a>':'';
+        return '<div style="padding:10px 0;border-bottom:1px solid var(--ln)"><div style="display:flex;justify-content:space-between;gap:8px"><span>'+title+badge+mint+'</span><span class="t">'+when(n.ts)+'</span></div><div class="k" style="margin-top:5px;font-size:14px">'+body+'</div></div>';
+      }).join(''):'<div class="k">'+(news.length?'Keine News in dieser Kategorie':'Noch keine News')+'</div>')+'</div>'+
+      (watch.length?'<div class="h2">Watch <span>News gut, noch kein Entry</span></div><div class="card">'+watch.map(w=>{
+        return '<div class="row"><span>'+$(w.name||(w.mint||'').slice(0,6))+'<br><span class="k" style="font-size:12px">'+$((w.news&&w.news.title)||'')+' · score '+(w.score||'?')+'</span></span><span class="pill y">Watch</span></div>';
       }).join('')+'</div>':'')+
-      '<div class="card"><b>Callouts</b> · '+((S.counts&&S.counts.callouts_n)||0)+
-      ((S.callouts||[]).length?(S.callouts||[]).slice(0,40).map(c=>{
-        const who=c.url?'<a href="'+$(c.url)+'">@'+$(c.author||'?')+'</a>':'@'+$(c.author||'?');
-        const coin=c.mint&&c.link?' · <a href="'+$(c.link)+'">FOMO</a>':'';
-        const body=$((c.text||'').replace(/\s+/g,' ').slice(0,280));
-        return '<div style="padding:10px 0;border-bottom:1px solid #222"><div class="row" style="border:0;padding:0"><span>'+who+coin+'</span><span class="t">'+when(c.ts)+'</span></div><div style="margin-top:6px;line-height:1.35">'+body+'</div></div>';
-      }).join(''):'<div class="k" style="padding:8px 0">Noch keine Callouts</div>')+
-      '</div>';
+      '<div class="h2">Callouts <span>'+((S.counts&&S.counts.callouts_n)||0)+'</span></div>'+
+      '<div class="card">'+((S.callouts||[]).length?(S.callouts||[]).slice(0,40).map(calloutRow).join(''):'<div class="k">Noch keine Callouts</div>')+'</div>';
   }
-  if(tab=='account')m.innerHTML='<div class="card">Mode '+S.mode+' · FOMO @'+$(st.desk.fomo_handle)+'<br>Notifier: Discord. Web push is not available on this hosting (Plan B).<br>Settings are read-only here; change them on Discord/Grok Bot: <i>set stop to -8%</i><br><a href="'+$(S.signup_url)+'">Invite: '+$(S.signup_url)+'</a></div>'+
- Object.entries(st).map(([g,o])=>'<div class="card"><b>'+g+'</b>'+Object.entries(o).map(([k,v])=>'<div class="row"><span class="k">'+k+'</span><span>'+$(v)+'</span></div>').join('')+'</div>').join('')
+  if(tab=='account')m.innerHTML='<div class="h2">Konto</div><div class="card"><div class="row"><span class="k">Mode</span><span class="chip paper">'+$(S.mode)+'</span></div><div class="row"><span class="k">FOMO</span><span>@'+$(st.desk&&st.desk.fomo_handle)+'</span></div><div class="row"><span class="k">Notifier</span><span>Discord</span></div>'+
+    '<div class="k" style="font-size:13px;margin-top:8px">Web Push gibt es auf diesem Hosting nicht (Plan B). Einstellungen nur lesbar — ändern über Discord/Grok Bot, z.B. <i>set stop to -8%</i>.</div>'+
+    '<a class="btn go" href="'+$(S.signup_url)+'" target="_blank" rel="noopener">FOMO Invite</a></div>'+
+    Object.entries(st).map(([g,o])=>'<div class="card"><b>'+$(g)+'</b>'+Object.entries(o||{}).map(([k,v])=>'<div class="row"><span class="k" style="font-size:13px">'+$(k)+'</span><span style="font-size:13px;text-align:right;word-break:break-all">'+$(v)+'</span></div>').join('')+'</div>').join('')
 }
 
 /* Trade sounds — Web Audio, no files. Unlock on first tap (iOS). */
@@ -209,8 +357,8 @@ draw=function(){
     const box=document.createElement('div');
     box.className='card';
     box.innerHTML='<b>Sounds</b><div class="k" style="margin:6px 0 10px">Cooler Ping bei Buy &amp; Sell. Tippe einmal irgendwo, dann sind Sounds an.</div>'+
-      '<div style="display:flex;gap:8px"><button type="button" id="tb" style="flex:1;padding:10px;border:0;border-radius:10px;background:#3ddc84;color:#0b0e14;font-weight:700">Buy test</button>'+
-      '<button type="button" id="ts" style="flex:1;padding:10px;border:0;border-radius:10px;background:#ff5470;color:#0b0e14;font-weight:700">Sell test</button></div>';
+      '<div style="display:flex;gap:8px"><button type="button" id="tb" style="flex:1;padding:10px;border:0;border-radius:999px;background:#00ff85;color:#000;font-weight:700">Buy test</button>'+
+      '<button type="button" id="ts" style="flex:1;padding:10px;border:0;border-radius:999px;background:#ff3b5c;color:#fff;font-weight:700">Sell test</button></div>';
     m.appendChild(box);
     const on=()=>{unlockSound();};
     document.getElementById('tb').onclick=()=>{on();playBuy()};
